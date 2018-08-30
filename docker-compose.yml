@@ -1,0 +1,115 @@
+version: "3"
+
+services:
+    alfresco:
+        build: ./alfresco
+        depends_on:
+            - postgres
+        environment:
+            JAVA_OPTS : "
+                -Ddb.driver=org.postgresql.Driver
+                -Ddb.username=alfresco
+                -Ddb.password=alfresco
+                -Ddb.url=jdbc:postgresql://postgres:5432/alfresco
+                -Dsolr.host=solr6
+                -Dsolr.port=8983
+                -Dsolr.secureComms=none
+                -Dsolr.base.url=/solr
+                -Dindex.subsystem.name=solr6
+                -Ddeployment.method=DOCKER_COMPOSE
+                -Dcsrf.filter.enabled=false
+                -Xmx${ALFRESCO_XMX} -Xms${ALFRESCO_XMS}
+                "
+        volumes:
+            - ./volumes/data/alf-repo-data:/usr/local/tomcat/alf_data
+            - ./volumes/logs/alfresco:/usr/local/tomcat/logs
+            - ./volumes/config/alfresco-global.properties:/usr/local/tomcat/shared/classes/alfresco-global.properties
+        networks:
+          - internal
+
+    share:
+        build: ./share
+        depends_on:
+            - alfresco
+        environment:
+            - REPO_HOST=alfresco
+            - REPO_PORT=8080
+            - "CATALINA_OPTS= -Xms${SHARE_XMS} -Xmx${SHARE_XMX}"
+        volumes:
+            - ./volumes/logs/share:/usr/local/tomcat/logs
+            - ./volumes/config/ext-share-config-custom.xml:/usr/local/tomcat/shared/classes/alfresco/web-extension/ext-share-config-custom.xml
+        networks:
+            - internal
+
+    solr6:
+        image: alfresco/alfresco-search-services:1.1.1.1
+        depends_on:
+            - alfresco
+        environment:
+            - SOLR_ALFRESCO_HOST=alfresco
+            - SOLR_ALFRESCO_PORT=8080
+            - SOLR_SOLR_HOST=solr6
+            - SOLR_SOLR_PORT=8983
+            - SOLR_CREATE_ALFRESCO_DEFAULTS=alfresco,archive
+            - SOLR_JAVA_MEM=-Xms${SOLR_XMS} -Xmx${SOLR_XMX}
+        # Set permissions for user with uid 1000 ('isadm' in host, 'solr' in container) 
+        volumes:
+            - ./volumes/data/solr-data:/opt/alfresco-search-services/data
+            # Logs directory cannot be exposed as volume as it includes also configuration inside (log4j.properties)
+        networks:
+            - internal
+
+    content-app:
+        image: alfresco/alfresco-content-app
+        depends_on:
+            - alfresco
+        networks:
+            - internal
+
+    postgres:
+        image: postgres:10
+        environment:
+            - POSTGRES_USER=alfresco
+            - POSTGRES_PASSWORD=alfresco
+            - POSTGRES_DB=alfresco
+        command: "
+            postgres
+              -c max_connections=${PG_MAX_CONNECTIONS}
+              -c shared_buffers=${PG_SHARED_BUFFERS}
+              -c effective_cache_size=${PG_EFFECTIVE_CACHE_SIZE}
+              -c maintenance_work_mem=${PG_MAINTENANCE_WORK_MEM}
+              -c checkpoint_completion_target=${PG_CHECKPOINT_COMPLETION_TARGET}
+              -c wal_buffers=${PG_WAL_BUFFERS}
+              -c default_statistics_target=${PG_DEFAULT_STATISTICS_TARGET}
+              -c random_page_cost=${PG_RANDOM_PAGE_COST}
+              -c effective_io_concurrency=${PG_EFFECTIVE_IO_CONCURRENCY}
+              -c work_mem=${PG_WORK_MEM}
+              -c min_wal_size=${PG_MIN_WAL_SIZE}
+              -c max_wal_size=${PG_MAX_WAL_SIZE}
+              -c max_worker_processes=${PG_MAX_WORKER_PROCESSES}
+              -c max_parallel_workers_per_gather=${PG_MAX_PARALLEL_WORKERS_PER_GATHER}
+              -c max_parallel_workers=${PG_MAX_PARALLEL_WORKERS}            
+              -c logging_collector=on
+              -c log_min_messages=LOG
+              -c log_directory=/var/log/postgresql"
+        volumes:
+           - ./volumes/data/postgres-data:/var/lib/postgresql/data
+           - ./volumes/logs/postgres:/var/log/postgresql
+        networks:
+            - internal
+
+    proxy:
+        image: nginx:stable-alpine
+        depends_on:
+            - content-app
+            - share
+        volumes:
+            - ./volumes/config/nginx.conf:/etc/nginx/conf.d/default.conf
+            - ./volumes/logs/nginx:/var/log/nginx
+        networks:
+            - internal
+        ports:
+            - 80:80
+
+networks:
+    internal:
