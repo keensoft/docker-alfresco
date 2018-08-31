@@ -1,6 +1,8 @@
 # Alfresco Community Docker
 
-*Production-ready* composition based in official [Docker Composition](https://github.com/Alfresco/acs-community-deployment/tree/master/docker-compose) provided by Alfresco.
+Deployment template based in official [Docker Composition](https://github.com/Alfresco/acs-community-deployment/tree/master/docker-compose) provided by Alfresco.
+
+You should review volumes, configuration, modules & tuning parameters before using this composition in **Production** environments.
 
 ## Source Images
 

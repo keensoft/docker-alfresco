@@ -52,7 +52,7 @@ services:
             - SOLR_SOLR_HOST=solr6
             - SOLR_SOLR_PORT=8983
             - SOLR_CREATE_ALFRESCO_DEFAULTS=alfresco,archive
-            - SOLR_JAVA_MEM=-XX:+UseG1GC -XX:+UseStringDeduplication -Xms${SOLR_XMS} -Xmx${SOLR_XMX}
+            - SOLR_JAVA_MEM=-Xms${SOLR_XMS} -Xmx${SOLR_XMX}
         # Set permissions for user with uid 1000 ('isadm' in host, 'solr' in container) 
         volumes:
             - ./volumes/data/solr-data:/opt/alfresco-search-services/data
