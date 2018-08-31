@@ -18,6 +18,7 @@ services:
                 -Dindex.subsystem.name=solr6
                 -Ddeployment.method=DOCKER_COMPOSE
                 -Dcsrf.filter.enabled=false
+                -XX:+UseG1GC -XX:+UseStringDeduplication
                 -Xmx${ALFRESCO_XMX} -Xms${ALFRESCO_XMS}
                 "
         volumes:
@@ -34,7 +35,7 @@ services:
         environment:
             - REPO_HOST=alfresco
             - REPO_PORT=8080
-            - "CATALINA_OPTS= -Xms${SHARE_XMS} -Xmx${SHARE_XMX}"
+            - "CATALINA_OPTS=-XX:+UseG1GC -XX:+UseStringDeduplication -Xms${SHARE_XMS} -Xmx${SHARE_XMX}"
         volumes:
             - ./volumes/logs/share:/usr/local/tomcat/logs
             - ./volumes/config/ext-share-config-custom.xml:/usr/local/tomcat/shared/classes/alfresco/web-extension/ext-share-config-custom.xml
@@ -51,7 +52,7 @@ services:
             - SOLR_SOLR_HOST=solr6
             - SOLR_SOLR_PORT=8983
             - SOLR_CREATE_ALFRESCO_DEFAULTS=alfresco,archive
-            - SOLR_JAVA_MEM=-Xms${SOLR_XMS} -Xmx${SOLR_XMX}
+            - SOLR_JAVA_MEM=-XX:+UseG1GC -XX:+UseStringDeduplication -Xms${SOLR_XMS} -Xmx${SOLR_XMX}
         # Set permissions for user with uid 1000 ('isadm' in host, 'solr' in container) 
         volumes:
             - ./volumes/data/solr-data:/opt/alfresco-search-services/data
