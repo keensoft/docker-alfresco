@@ -156,4 +156,4 @@ You can set additional properties modifying default files available at `volumes/
 
 ### Configuration tips
 
-We are including some other configuration operations at the [Wiki](https://github.com/keensoft/docker-alfresco/wiki)
+We are including some other configuration operations in this [Wiki](https://github.com/keensoft/docker-alfresco/wiki)
