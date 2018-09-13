@@ -153,3 +153,7 @@ After you `rebuild` the image, they will be available within the Alfresco instan
 ### Adding configuration to repository
 
 You can set additional properties modifying default files available at `volumes/config` folder.
+
+### Configuration tips
+
+We are including some other configuration operations in this [Wiki](https://github.com/keensoft/docker-alfresco/wiki)
