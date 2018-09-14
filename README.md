@@ -9,7 +9,7 @@ You should review volumes, configuration, modules & tuning parameters before usi
 * [alfresco 6.0.7-ga](https://github.com/Alfresco/acs-community-packaging/blob/master/docker-alfresco/Dockerfile)
 * [share 6.0](https://github.com/Alfresco/share/blob/6.0/packaging/docker/Dockerfile)
 * [postgres 10](https://github.com/docker-library/postgres/blob/master/10/Dockerfile)
-* [alfresco-search-services 1.1.1.1](https://github.com/Alfresco/SearchServices/blob/master/packaging/src/docker/Dockerfile)
+* [alfresco-search-services 1.2.0](https://github.com/Alfresco/SearchServices/blob/master/packaging/src/docker/Dockerfile)
 * [content-app master:latest](https://hub.docker.com/r/alfresco/alfresco-content-app/)
 
 ## Volumes
