@@ -22,7 +22,8 @@ volumes
 ├── config
 │   ├── alfresco-global.properties
 │   ├── ext-share-config-custom.xml
-│   └── nginx.conf
+│   ├── nginx.conf
+│   └── nginx.htpasswd
 ├── data
 │   ├── alf-repo-data
 │   ├── postgres-data
@@ -39,6 +40,7 @@ volumes
 * `alfresco-global.properties` for Repository
 * `ext-share-config-custom.xml` for Share
 * `nginx.conf` for HTTP Proxy
+* `nginx.htpasswd` for Basic Auth credentials to access SOLR Web Console
 
 **Data** wil be persisted automatically in `data` folder. Once launched, Docker will create three subfolders for following services:
 
