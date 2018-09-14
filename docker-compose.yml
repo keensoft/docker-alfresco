@@ -43,7 +43,7 @@ services:
             - internal
 
     solr6:
-        image: alfresco/alfresco-search-services:1.1.1.1
+        image: alfresco/alfresco-search-services:1.2.0
         depends_on:
             - alfresco
         environment:
@@ -61,7 +61,7 @@ services:
             - internal
 
     content-app:
-        image: alfresco/alfresco-content-app
+        image: alfresco/alfresco-content-app:master-latest
         depends_on:
             - alfresco
         networks:
