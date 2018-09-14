@@ -93,6 +93,20 @@ PG_MAX_PARALLEL_WORKERS_PER_GATHER=1
 PG_MAX_PARALLEL_WORKERS=1
 ```
 
+## SOLR Considerations
+
+Alfresco SOLR API has been protected to be accessed from outside Docker network. You can enable this URLs removing following lines at [nginx.conf](https://github.com/keensoft/docker-alfresco/blob/master/volumes/config/nginx.conf)
+
+```
+    # Protect access to SOLR APIs
+    location ~ ^(/.*/service/api/solr/.*)$ {return 403;}
+    location ~ ^(/.*/s/api/solr/.*)$ {return 403;}
+    location ~ ^(/.*/wcservice/api/solr/.*)$ {return 403;}
+    location ~ ^(/.*/wcs/api/solr/.*)$ {return 403;}    
+```
+
+SOLR Web Console (http://localhost/solr) access has been protected with Basic Auth. Default user/password is `admin/admin`, but it can be customised modifying the content of the file [nginx.htpasswd](https://github.com/keensoft/docker-alfresco/blob/master/volumes/config/nginx.htpasswd)
+
 # How to use this composition
 
 ## Start Docker

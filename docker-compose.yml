@@ -105,7 +105,7 @@ services:
             - content-app
             - share
         volumes:
-            - ./volumes/config/nginx.conf:/etc/nginx/conf.d/default.conf
+            - ./volumes/config:/etc/nginx/conf.d
             - ./volumes/logs/nginx:/var/log/nginx
         networks:
             - internal
