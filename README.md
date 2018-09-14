@@ -104,7 +104,10 @@ Alfresco SOLR API has been protected to be accessed from outside Docker network.
     location ~ ^(/.*/service/api/solr/.*)$ {return 403;}
     location ~ ^(/.*/s/api/solr/.*)$ {return 403;}
     location ~ ^(/.*/wcservice/api/solr/.*)$ {return 403;}
-    location ~ ^(/.*/wcs/api/solr/.*)$ {return 403;}    
+    location ~ ^(/.*/wcs/api/solr/.*)$ {return 403;}
+    
+    location ~ ^(/.*/proxy/alfresco/api/solr/.*)$ {return 403 ;}
+    location ~ ^(/.*/-default-/proxy/alfresco/api/.*)$ {return 403;}  
 ```
 
 SOLR Web Console (http://localhost/solr) access has been protected with Basic Auth. Default user/password is `admin/admin`, but it can be customised modifying the content of the file [nginx.htpasswd](https://github.com/keensoft/docker-alfresco/blob/master/volumes/config/nginx.htpasswd)
