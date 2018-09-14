@@ -116,11 +116,11 @@ Start docker and check the ports are correctly bound.
 ```bash
 $ docker-compose up -d
 $ docker ps
-nginx:stable-alpine 						0.0.0.0:80->80/tcp
-alfresco/alfresco-search-services:1.1.1.1	8983/tcp
-docker-alfresco_share_1 					8080/tcp
-alfresco/alfresco-content-app				80/tcp
-docker-alfresco_alfresco 					8080/tcp
+nginx:stable-alpine                         0.0.0.0:80->80/tcp
+alfresco/alfresco-search-services:1.1.1.1   8983/tcp
+docker-alfresco_share_1                     8080/tcp
+alfresco/alfresco-content-app               80/tcp
+docker-alfresco_alfresco                    8080/tcp
 ```
 
 ### Viewing System Logs
