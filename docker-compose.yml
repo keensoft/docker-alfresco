@@ -7,7 +7,7 @@ services:
         depends_on:
             - db
         environment:
-            JAVA_OPTS : "
+            JAVA_OPTS : '
                 -Ddb.driver=org.postgresql.Driver
                 -Ddb.username=alfresco
                 -Ddb.password=alfresco
@@ -21,7 +21,7 @@ services:
                 -Dcsrf.filter.enabled=false
                 -XX:+UseG1GC -XX:+UseStringDeduplication
                 -Xmx${ALFRESCO_XMX} -Xms${ALFRESCO_XMS}
-                "
+                '
         volumes:
             - ./volumes/data/alf-repo-data:/usr/local/tomcat/alf_data
             - ./volumes/logs/alfresco:/usr/local/tomcat/logs
