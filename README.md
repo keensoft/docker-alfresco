@@ -177,3 +177,8 @@ You can set additional properties modifying default files available at `volumes/
 ### Configuration tips
 
 We are including some other configuration operations in this [Wiki](https://github.com/keensoft/docker-alfresco/wiki)
+
+* [Configuring an SMTP internal server](https://github.com/keensoft/docker-alfresco/wiki/Configuring-an-SMTP-internal-server)
+* [Configuring an OpenLDAP internal server](https://github.com/keensoft/docker-alfresco/wiki/Configuring-an-OpenLDAP-internal-server)
+* [Running the service behind an SSL Proxy](https://github.com/keensoft/docker-alfresco/wiki/Running-the-service-behind-an-SSL-Proxy)
+* [Using MariaDB instead of PostgreSQL as database](https://github.com/keensoft/docker-alfresco/wiki/Using-MariaDB-instead-of-PostgreSQL-as-database)
