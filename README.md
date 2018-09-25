@@ -182,3 +182,4 @@ We are including some other configuration operations in this [Wiki](https://gith
 * [Configuring an OpenLDAP internal server](https://github.com/keensoft/docker-alfresco/wiki/Configuring-an-OpenLDAP-internal-server)
 * [Running the service behind an SSL Proxy](https://github.com/keensoft/docker-alfresco/wiki/Running-the-service-behind-an-SSL-Proxy)
 * [Using MariaDB instead of PostgreSQL as database](https://github.com/keensoft/docker-alfresco/wiki/Using-MariaDB-instead-of-PostgreSQL-as-database)
+* [Configuring AOS Module (SharePoint protocol)](https://github.com/keensoft/docker-alfresco/wiki/Configuring-AOS-Module-%28SharePoint-protocol%29)
