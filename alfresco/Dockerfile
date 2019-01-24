@@ -17,3 +17,19 @@ COPY modules/jars $TOMCAT_DIR/webapps/alfresco/WEB-INF/lib
 
 RUN java -jar $TOMCAT_DIR/alfresco-mmt/alfresco-mmt*.jar install \
     $TOMCAT_DIR/amps $TOMCAT_DIR/webapps/alfresco -directory -nobackup -force
+
+# Install AOS
+RUN yum -y update && \
+ yum -y install wget && \
+ yum -y install unzip && \
+ yum clean all
+
+RUN set -x \
+        && mkdir /tmp/aos \
+        && wget --no-check-certificate https://download.alfresco.com/cloudfront/release/community/201806-GA-build-00113/alfresco-aos-module-distributionzip-1.2.0.zip \
+        && unzip alfresco-aos-module-distributionzip-1.2.0.zip -d /tmp/aos \
+        && mv /tmp/aos/extension/* $TOMCAT_DIR/shared/classes/alfresco/extension \
+        && mv /tmp/aos/alfresco-aos-module-1.2.0.amp amps \
+        && mv /tmp/aos/aos-module-license.txt licenses \
+        && mv /tmp/aos/_vti_bin.war $TOMCAT_DIR/webapps \
+        && rm -rf /tmp/aos alfresco-aos-module-distributionzip-1.2.0.zip
