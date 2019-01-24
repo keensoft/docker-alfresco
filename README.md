@@ -149,7 +149,7 @@ Use the following username/password combination to login.
 Alfresco and related web applications can be accessed from the below URIs when the servers have started.
 
 ```
-http://localhost               - Alfresco Content Application
+http://localhost/aca           - Alfresco Content Application
 http://localhost/share         - Alfresco Share WebApp
 http://localhost/alfresco      - Alfresco Repository (REST)
 http://localhost/solr          - Alfresco Search Services (Basic Auth, admin/admin by default)

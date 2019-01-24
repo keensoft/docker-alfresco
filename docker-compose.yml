@@ -3,7 +3,6 @@ version: "3"
 services:
     alfresco:
         build: ./alfresco
-        container_name: alfresco
         depends_on:
             - db
         environment:
@@ -31,7 +30,6 @@ services:
 
     share:
         build: ./share
-        container_name: share
         depends_on:
             - alfresco
         environment:
@@ -46,7 +44,6 @@ services:
 
     solr6:
         image: alfresco/alfresco-search-services:1.2.0
-        container_name: solr6
         depends_on:
             - alfresco
         environment:
@@ -65,15 +62,15 @@ services:
 
     content-app:
         image: alfresco/alfresco-content-app:master-latest
-        container_name: content-app
         depends_on:
             - alfresco
+        environment:
+            - BASEPATH=aca
         networks:
             - internal
 
     db:
         image: postgres:10
-        container_name: postgres
         environment:
             - POSTGRES_USER=alfresco
             - POSTGRES_PASSWORD=alfresco
@@ -106,7 +103,6 @@ services:
 
     proxy:
         image: nginx:stable-alpine
-        container_name: proxy
         depends_on:
             - content-app
             - share
