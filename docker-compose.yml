@@ -22,9 +22,9 @@ services:
                 -Xmx${ALFRESCO_XMX} -Xms${ALFRESCO_XMS}
                 '
         volumes:
-            - ./volumes/data/alf-repo-data:/usr/local/tomcat/alf_data
-            - ./volumes/logs/alfresco:/usr/local/tomcat/logs
-            - ./volumes/config/alfresco-global.properties:/usr/local/tomcat/shared/classes/alfresco-global.properties
+            - alf-repo-data-volume:/usr/local/tomcat/alf_data
+            - alf-logs-volume:/usr/local/tomcat/logs
+            - alf-shared-volume:/usr/local/tomcat/shared
         networks:
           - internal
 
@@ -37,8 +37,8 @@ services:
             - REPO_PORT=8080
             - "CATALINA_OPTS=-XX:+UseG1GC -XX:+UseStringDeduplication -Xms${SHARE_XMS} -Xmx${SHARE_XMX}"
         volumes:
-            - ./volumes/logs/share:/usr/local/tomcat/logs
-            - ./volumes/config/ext-share-config-custom.xml:/usr/local/tomcat/shared/classes/alfresco/web-extension/ext-share-config-custom.xml
+            - share-logs-volume:/usr/local/tomcat/logs
+            - share-shared-volumes:/usr/local/tomcat/shared
         networks:
             - internal
 
@@ -55,7 +55,7 @@ services:
             - SOLR_JAVA_MEM=-Xms${SOLR_XMS} -Xmx${SOLR_XMX}
         # Set permissions for user with uid 1000 ('isadm' in host, 'solr' in container) 
         volumes:
-            - ./volumes/data/solr-data:/opt/alfresco-search-services/data
+            - solr-data-volume:/opt/alfresco-search-services/data
             # Logs directory cannot be exposed as volume as it includes also configuration inside (log4j.properties)
         networks:
             - internal
@@ -96,19 +96,19 @@ services:
               -c log_min_messages=LOG
               -c log_directory=/var/log/postgresql"
         volumes:
-           - ./volumes/data/postgres-data:/var/lib/postgresql/data
-           - ./volumes/logs/postgres:/var/log/postgresql
+           - pg-data-volume:/var/lib/postgresql/data
+           - pg-log-volume:/var/log/postgresql
         networks:
             - internal
 
     proxy:
-        image: nginx:stable-alpine
+        build: ./nginx
         depends_on:
             - content-app
             - share
         volumes:
-            - ./volumes/config:/etc/nginx/conf.d
-            - ./volumes/logs/nginx:/var/log/nginx
+            - nginx-config-volume:/etc/nginx
+            - nginx-log-volume:/var/log/nginx
         networks:
             - internal
         ports:
@@ -116,3 +116,16 @@ services:
 
 networks:
     internal:
+    
+    
+volumes:
+    alf-repo-data-volume:
+    alf-logs-volume:
+    alf-shared-volume:
+    share-logs-volume:
+    share-shared-volumes:
+    solr-data-volume:
+    pg-data-volume:
+    pg-log-volume:
+    nginx-config-volume:
+    nginx-log-volume:
