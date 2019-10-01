@@ -3,7 +3,7 @@ version: "3"
 services:
     alfresco:
         build: ./alfresco
-        container_name: alfresco
+        container_name: alfresco-alf
         depends_on:
             - db
         environment:
@@ -31,7 +31,7 @@ services:
 
     share:
         build: ./share
-        container_name: share
+        container_name: alfresco-share
         depends_on:
             - alfresco
         environment:
@@ -46,7 +46,7 @@ services:
 
     solr6:
         image: alfresco/alfresco-search-services:1.2.0
-        container_name: solr6
+        container_name: alfresco-solr6
         depends_on:
             - alfresco
         environment:
@@ -59,13 +59,13 @@ services:
         # Set permissions for user with uid 1000 ('isadm' in host, 'solr' in container) 
         volumes:
             - solr-data-volume:/opt/alfresco-search-services/data
-            # Logs directory cannot be exposed as volume as it includes also configuration inside (log4j.properties)
+            - solr-log-volume:/opt/alfresco-search-services/logs
         networks:
             - internal
 
     content-app:
         image: alfresco/alfresco-content-app:master-latest
-        container_name: aca
+        container_name: alfresco-aca
         depends_on:
             - alfresco
         environment:
@@ -75,7 +75,7 @@ services:
 
     db:
         image: postgres:10
-        container_name: postgres
+        container_name: alfresco-postgres
         environment:
             - POSTGRES_USER=alfresco
             - POSTGRES_PASSWORD=alfresco
@@ -108,7 +108,7 @@ services:
 
     proxy:
         build: ./nginx
-        container_name: nginx
+        container_name: alfresco-nginx
         depends_on:
             - content-app
             - share
@@ -131,6 +131,7 @@ volumes:
     share-logs-volume:
     share-shared-volumes:
     solr-data-volume:
+    solr-log-volume:
     pg-data-volume:
     pg-log-volume:
     nginx-config-volume:
