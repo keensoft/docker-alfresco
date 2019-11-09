@@ -13,3 +13,5 @@ COPY modules/jars $TOMCAT_DIR/webapps/share/WEB-INF/lib
 
 RUN java -jar $TOMCAT_DIR/alfresco-mmt/alfresco-mmt*.jar install \
     $TOMCAT_DIR/amps_share $TOMCAT_DIR/webapps/share -directory -nobackup -force
+
+COPY ext-share-config-custom.xml $TOMCAT_DIR/shared/classes/alfresco/web-extension/ext-share-config-custom.xml

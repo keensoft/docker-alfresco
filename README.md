@@ -12,51 +12,6 @@ You should review volumes, configuration, modules & tuning parameters before usi
 * [alfresco-search-services 1.2.0](https://github.com/Alfresco/SearchServices/blob/master/packaging/src/docker/Dockerfile)
 * [content-app master:latest](https://hub.docker.com/r/alfresco/alfresco-content-app/)
 
-## Volumes
-
-A directory named `volumes` is located in the root folder to store configuration, data and log files.
-
-```bash
-$ tree volumes
-volumes
-├── config
-│   ├── alfresco-global.properties
-│   ├── ext-share-config-custom.xml
-│   ├── nginx.conf
-│   └── nginx.htpasswd
-├── data
-│   ├── alf-repo-data
-│   ├── postgres-data
-│   └── solr-data
-└── logs
-    ├── alfresco
-    ├── nginx
-    ├── postgres
-    └── share
-```
-
-**Configuration** files are available at `config` folder:
-
-* `alfresco-global.properties` for Repository
-* `ext-share-config-custom.xml` for Share
-* `nginx.conf` for HTTP Proxy
-* `nginx.htpasswd` for Basic Auth credentials to access SOLR Web Console
-
-**Data** wil be persisted automatically in `data` folder. Once launched, Docker will create three subfolders for following services:
-
-* `alf-repo-data` for Content Store
-* `postgres-data` for Database
-* `solr-data` for Indexes
-
->> For Linux hosts, set `solr-data` folder permissions to user with UID 1001, as `alfresco-search-services` is using an container user named `solr` with UID 1001.
-
-**Logs** folder includes log files for:
-
-* `alfresco` contains Tomcat repository logs
-* `nginx` contains HTTP Proxy logs
-* `postgres` contains database logs
-* `share` contains Tomcat share logs
-
 ## Tuning options
 
 Memory resources for the containers can be changed in `.env` file.
@@ -97,7 +52,7 @@ PG_MAX_PARALLEL_WORKERS=1
 
 ## SOLR Considerations
 
-Alfresco SOLR API has been protected to be accessed from outside Docker network. You can enable this URLs removing following lines at [nginx.conf](https://github.com/keensoft/docker-alfresco/blob/master/volumes/config/nginx.conf)
+Alfresco SOLR API has been protected to be accessed from outside Docker network. You can enable this URLs removing following lines at `nginx-config-volume`/conf.d/alfresco.conf (see [Volumes setup](#volumes)) and restarting Nginx.
 
 ```
     # Protect access to SOLR APIs
@@ -110,7 +65,49 @@ Alfresco SOLR API has been protected to be accessed from outside Docker network.
     location ~ ^(/.*/-default-/proxy/alfresco/api/.*)$ {return 403;}  
 ```
 
-SOLR Web Console (http://localhost/solr) access has been protected with Basic Auth. Default user/password is `admin/admin`, but it can be customised modifying the content of the file [nginx.htpasswd](https://github.com/keensoft/docker-alfresco/blob/master/volumes/config/nginx.htpasswd)
+SOLR Web Console (http://localhost/solr) access has been protected with Basic Auth. Default user/password is `admin/admin`, but it can be customised modifying the content of the file `nginx-config-volume`/conf.d/nginx.htpasswd (see [Volumes setup](#volumes)) and restarting Nginx.
+
+## <a name="volumes"></a>Volumes setup
+This setup uses named volumes rather than bind/host volumes because they are easier to manage and more compatible in different platforms.
+
+The volumes used are the next ones (DON'T pre-create volumes with `docker volume create` before first execution or container won't populate these ones with container original content):
+
+ - alf-repo-data-volume
+ - alf-logs-volume
+ - alf-shared-volume
+ - share-logs-volume
+ - share-shared-volumes
+ - solr-data-volume
+ - solr-log-volume
+ - pg-data-volume
+ - pg-log-volume
+ - nginx-config-volume
+ - nginx-log-volume
+ 
+ To access the contents of these volumes execute this (from [gdiepen/volume-sharer](https://github.com/gdiepen/volume-sharer)):
+```bash
+(Linux)
+ docker run --name volume-sharer \
+	--rm \
+	-d \
+	-v /var/lib/docker/volumes:/docker_volumes \
+	-p 139:139 \
+	-p 445:445 \
+	-v /var/run/docker.sock:/var/run/docker.sock \
+	gdiepen/volume-sharer
+	
+(Windows)
+ docker run --name volume-sharer \
+	--rm \
+	-d \
+	-v /var/lib/docker/volumes:/docker_volumes \
+	-p 139:139 \
+	-p 445:445 \
+	--net host
+	-v /var/run/docker.sock:/var/run/docker.sock \
+	gdiepen/volume-sharer
+```
+You can access (and modify) the content of these volumes through `smb://127.0.0.1:1139/` (linux) or `\\\10.0.7.75.2` (Windows)
 
 # How to use this composition
 
@@ -137,7 +134,7 @@ You can view the system logs by issuing the following.
 $ docker-compose logs -f
 ```
 
-Logs for every service are also available at `volumes/logs` folder.
+Logs for every service are also available in correspondent log volume.
 
 ## Access
 
@@ -172,7 +169,7 @@ After you `rebuild` the image, they will be available within the Alfresco instan
 
 ### Adding configuration to repository
 
-You can set additional properties modifying default files available at `volumes/config` folder.
+You can set additional properties modifying default files available at `alf-shared-volume`/classes/ folder.
 
 ### Configuration tips
 

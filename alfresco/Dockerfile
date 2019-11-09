@@ -33,3 +33,5 @@ RUN set -x \
         && mv /tmp/aos/aos-module-license.txt licenses \
         && mv /tmp/aos/_vti_bin.war $TOMCAT_DIR/webapps \
         && rm -rf /tmp/aos alfresco-aos-module-distributionzip-1.2.0.zip
+        
+COPY alfresco-global.properties $TOMCAT_DIR/shared/classes/alfresco-global.properties
